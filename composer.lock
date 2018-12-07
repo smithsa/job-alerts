@@ -149,7 +149,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2018-10-15T11:30:00+00:00"
+            "time": "2018-10-15 11:30:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -197,7 +197,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2018-06-11T23:09:50+00:00"
+            "time": "2018-06-11 23:09:50"
         },
         {
             "name": "phar-io/manifest",
@@ -252,7 +252,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2018-07-08T19:23:20+00:00"
+            "time": "2018-07-08 19:23:20"
         },
         {
             "name": "phar-io/version",
@@ -514,7 +514,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-11-04T18:50:11+00:00"
+            "time": "2018-11-04 18:50:11"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -577,7 +577,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-11-25T09:38:39+00:00"
+            "time": "2018-11-25 09:38:39"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -627,7 +627,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2018-10-10T04:54:51+00:00"
+            "time": "2018-10-10 04:54:51"
         },
         {
             "name": "phpunit/php-text-template",
@@ -717,7 +717,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2018-06-04T07:17:52+00:00"
+            "time": "2018-06-04 07:17:52"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -766,7 +766,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2018-10-30T07:50:55+00:00"
+            "time": "2018-10-30 07:50:55"
         },
         {
             "name": "phpunit/phpunit",
@@ -850,7 +850,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-07T13:10:50+00:00"
+            "time": "2018-12-07 13:10:50"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -895,7 +895,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2018-05-15T05:52:48+00:00"
+            "time": "2018-05-15 05:52:48"
         },
         {
             "name": "sebastian/comparator",
@@ -959,7 +959,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2018-12-04T14:31:16+00:00"
+            "time": "2018-12-04 14:31:16"
         },
         {
             "name": "sebastian/diff",
@@ -1015,7 +1015,7 @@
                 "unidiff",
                 "unified diff"
             ],
-            "time": "2018-10-30T05:42:15+00:00"
+            "time": "2018-10-30 05:42:15"
         },
         {
             "name": "sebastian/environment",
@@ -1065,7 +1065,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2018-11-25T09:31:21+00:00"
+            "time": "2018-11-25 09:31:21"
         },
         {
             "name": "sebastian/exporter",
@@ -1132,7 +1132,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2018-06-28T14:22:04+00:00"
+            "time": "2018-06-28 14:22:04"
         },
         {
             "name": "sebastian/global-state",
@@ -1230,7 +1230,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2018-10-30T05:41:47+00:00"
+            "time": "2018-10-30 05:41:47"
         },
         {
             "name": "sebastian/object-reflector",
@@ -1275,7 +1275,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2018-05-15T05:50:44+00:00"
+            "time": "2018-05-15 05:50:44"
         },
         {
             "name": "sebastian/recursion-context",
@@ -1328,7 +1328,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2018-05-15T05:52:05+00:00"
+            "time": "2018-05-15 05:52:05"
         },
         {
             "name": "sebastian/resource-operations",
@@ -1370,7 +1370,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2018-10-04T04:07:39+00:00"
+            "time": "2018-10-04 04:07:39"
         },
         {
             "name": "sebastian/version",
@@ -1503,7 +1503,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2018-05-29T14:25:02+00:00"
+            "time": "2018-05-29 14:25:02"
         }
     ],
     "aliases": [],
