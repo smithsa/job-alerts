@@ -23,6 +23,14 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
 
 4. rename config.example.php to config.php and fill out appropriate configuration fields.
 
+For the feed=>map_fields array field  please note that active date is considered to be the 'date_updated' field so add an additional array field 
+```
+	'date_updated' => ''
+```
+	
+
+
+
 ## Built With
 
 *	[PHP-MySQLi-Database-Class](https://github.com/ThingEngineer/PHP-MySQLi-Database-Class)

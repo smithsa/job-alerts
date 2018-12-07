@@ -5,7 +5,7 @@ return [
       'url' => '',
     	'username' => '',
     	'password' => '',
-      'map_fields' => [
+      'map_fields' => [ 
           'job_id'  => '',
           'title' => '',
           'city' => '',
@@ -15,9 +15,7 @@ return [
           'description' => '',
           'apply_url' => '',
           'employment_type' => '',
-          'start_date' => '',
-          'date_created' => '',
-          'date_updated' => ''
+          'start_date' => ''
       ]
     ],
    	'database' => [
