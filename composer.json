@@ -1,0 +1,24 @@
+{
+    "name": "sadesmith/shaker-job-alerts",
+    "description": "Library to send job alerts of custom job feeds using MailChimp and Mandrill",
+    "type": "library",
+    "license": "Apache License 2.0",
+    "authors": [
+        {
+            "name": "Sade Smith",
+            "email": "sade.smith@shaker.com"
+        },
+        {
+            "name": "Jeremy Breit",
+            "email": "jeremy.breit@shaker.com"
+        },
+        {
+            "name": "Shaker",
+            "email": "info@shaker.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "thingengineer/mysqli-database-class": "dev-master"
+    }
+}
