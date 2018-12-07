@@ -21,6 +21,8 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
 	composer install
 ```
 
+4. rename config.example.php to config.php and fill out appropriate configuration fields.
+
 ## Built With
 
 *	[PHP-MySQLi-Database-Class](https://github.com/ThingEngineer/PHP-MySQLi-Database-Class)

@@ -19,6 +19,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "thingengineer/mysqli-database-class": "dev-master"
+        "thingengineer/mysqli-database-class": "dev-master",
+        "mandrill/mandrill": "1.0.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
     }
 }
