@@ -59,4 +59,18 @@ class Feed {
 		$simplexml = $this->convertXMLStringtoPHPObject($xml_string);
 		return $simplexml;
 	}
+
+  	/** 
+	* get an array of job ids
+	* @return (array) an array of strings which are the jobids in the feed
+	*/
+	public function getJobIDsFromFeed() {
+		$xml_string = $this->getXMLFeed();		
+		$simplexml = $this->convertXMLStringtoPHPObject($xml_string);
+		$job_ids_array = array();
+		foreach($simplexml as $feed_data_point){
+			array_push($job_ids_array , (string)$feed_data_point->JobID);
+		}
+		return $job_ids_array;
+	}
 }

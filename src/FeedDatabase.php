@@ -81,6 +81,8 @@ class FeedDatabase {
 	public function populateTable() {
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
+		//todo add mapfields as reference;
+		$map_fields = $this->config['feed']['map_fields'];
 		$feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
 
 		//gathering xml data into an array to later insert in db
@@ -108,6 +110,25 @@ class FeedDatabase {
 	}
 
 	/** 
+	* Deletes entries in database but not in the feed. Jobs removed from feed.
+	*
+	* @return (array) return the ids deleted entries
+	*/
+	public function deleteJobEntriesTable() {
+		function addStringQoutes($job_id){
+			return "'".$job_id."'";
+		}
+		$db = $this->connectDb();
+		$feed_ob = new Feed($this->config);
+		$ids_in_feed = $feed_ob->getJobIDsFromFeed();
+		$ids_in_feed = array_map("addStringQoutes", $ids_in_feed );
+		$query = "DELETE FROM ".$this->tableName." WHERES job_id NOT IN (".implode(', ', $ids_in_feed).");";
+		$result = $db->rawQuery($query);
+		$db->disconnect();
+		return $result;
+	}
+
+	/** 
 	* Updates the database based on new jobs added to the feed
 	*
 	* @return (array) return the ids inserted, will return -1 on an insert failed error
@@ -119,6 +140,8 @@ class FeedDatabase {
 
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
+		//todo add mapfields as reference;
+		$map_fields = $this->config['feed']['map_fields'];
 		$updated_feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
 		$job_ids_in_db_query_results = $db->get($this->tableName, null, array('job_id'));
 		$job_ids_in_db = array_map("returnJobID", $job_ids_in_db_query_results);
