@@ -25,7 +25,7 @@ class FeedDatabase {
 
 	/** 
 	* Class constructor
-	* @param (associative array) the configuration variable in the config.php file
+	* @param associative array the configuration variable in the config.php file
 	*/
 	function __construct($config) {
 		$this->config = $config;
@@ -35,7 +35,7 @@ class FeedDatabase {
 
     /** 
 	* Connects to the database
-	* @return (MysqliDb) an instance of MysqliDb to handle the db operations
+	* @return object an instance of MysqliDb to handle the db operations
 	*/
     public function connectDb() {
     		$db = new MysqliDb (
@@ -51,7 +51,7 @@ class FeedDatabase {
 
 	/** 
 	* Creates the feed table
-	* @return (int) 1 if the creation is successful, otherwise 0
+	* @return int 1 if the creation is successful, otherwise 0
 	*/
 	public function createTable() {
 		$db = $this->connectDb();
@@ -76,7 +76,7 @@ class FeedDatabase {
 	/** 
 	* Populates the database based on the feed defined in the configuration file using the Feed object
 	*
-	* @return (array) return the ids inserted, will return -1 on an insert failed error
+	* @return array return the ids inserted, will return -1 on an insert failed error
 	*/
 	public function populateTable() {
 		$db = $this->connectDb();
@@ -112,7 +112,7 @@ class FeedDatabase {
 	/** 
 	* Deletes entries in database but not in the feed. Jobs removed from feed.
 	*
-	* @return (array) return the ids deleted entries
+	* @return array return the ids deleted entries
 	*/
 	public function deleteJobEntriesTable() {
 		function addStringQoutes($job_id){
@@ -130,8 +130,8 @@ class FeedDatabase {
 
 	/** 
 	* Updates the database based on new jobs added to the feed
-	*
-	* @return (array) return the ids inserted, will return -1 on an insert failed error
+     *
+	* @return array return the ids inserted, will return -1 on an insert failed error
 	*/
 	public function updateTable() {
 		function returnJobID($arrayItem){
@@ -170,4 +170,15 @@ class FeedDatabase {
 		$db->disconnect();
 		return !$query_result ? -1 : $query_result;
 	}
+
+    /**
+     * Will get the jobs feed in XML from the database
+     *
+     * @return array the jobs feed as array
+     */
+    public function getFeedFromDatabase() {
+        $db = $this->connectDb();
+        $jobsResult = $db->get($this->tableName);
+        return $jobsResult;
+    }
 }

@@ -2,10 +2,10 @@
 
 return [
     'feed' => [
-      'url' => '',
-    	'username' => '',
-    	'password' => '',
-      'map_fields' => [ 
+        'url' => '',
+        'username' => '',
+        'password' => '',
+        'map_fields' => [
           'job_id'  => '',
           'title' => '',
           'city' => '',
@@ -16,25 +16,24 @@ return [
           'apply_url' => '',
           'employment_type' => '',
           'start_date' => ''
-      ]
+        ],
+        'is_augmented_feed' => false
     ],
    	'database' => [
-   		'host' => '',
-   		'port' => '',
-   		'username' => '',
-   		'password' => ''
+        'host' => '',
+        'port' => '',
+        'name' => '',
+        'username' => '',
+        'password' => ''
    	],
     'mailChimp' => [
-    	'username' => '',
-      'list_id' => '',
-    	'API_key' => ''
+        'username' => '',
+        'list_id' => '',
+        'API_key' => ''
     ],
     'mandrill' => [
     	'username'=> '',
     	'API_key'=> ''
-    ]
-    'alerts' => [
-      'createFeed' =>  false
     ]
 ];
 

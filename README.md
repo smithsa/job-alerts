@@ -28,7 +28,11 @@ For the feed=>map_fields array field  please note that active date is considered
 	'date_updated' => ''
 ```
 	
+## Considerations
 
+Augmented feeds are feeds that need a date attached. The Feed Class can generate a json feed.
+An example of hoe to generate the feed can be found in `examples/augmented-feeds/generate-feed.php` and the feed itself
+can be found in `examples/augmented-feeds/feed`
 
 
 ## Built With
