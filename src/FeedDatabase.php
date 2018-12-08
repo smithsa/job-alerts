@@ -56,17 +56,21 @@ class FeedDatabase {
 	public function createTable() {
 		$db = $this->connectDb();
 
-		$fields = $this->tableFields;
-		$query = 'CREATE TABLE '.$this->tableName.' ( id int AUTO_INCREMENT,';
-	
-		foreach ($fields as $fieldName => $fieldType) {
-			$query.= ' '.$fieldName.' '.$fieldType. ',';
+		$result = 0;
+		if (!$db->tableExists($this->tableName)){
+			$fields = $this->tableFields;
+			$query = 'CREATE TABLE '.$this->tableName.' ( id int AUTO_INCREMENT,';
+		
+			foreach ($fields as $field_name => $fieldType) {
+				$query.= ' '.$field_name.' '.$fieldType. ',';
+			}
+			$query .= ' PRIMARY KEY (id)';
+			$query .= ' );';
+			$result = $db->rawQuery($query);
 		}
-		$query .= ' PRIMARY KEY (id)';
-		$query .= ' );';
-		$result = $db->rawQuery($query);
+		
 		$db->disconnect();
-		return is_array($result) ? 1 : 0;
+		return is_array($result) ? 1 : $result;
 	}
 
 	/** 
@@ -77,22 +81,22 @@ class FeedDatabase {
 	public function populateTable() {
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
-		$feedDataAsSimpleXML = $feed_ob->getXMLFeedObject();
+		$feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
 
 		//gathering xml data into an array to later insert in db
 		$jobs_feed_data = Array();
-		foreach($feedDataAsSimpleXML as $feedDataPoint){
+		foreach($feed_data_as_simple_xml as $feed_data_point){
 			array_push($jobs_feed_data, Array(
-		          'job_id'  => (string)$feedDataPoint->JobID,
-		          'title' => (string)$feedDataPoint->JobTitle,
-		          'city' => (string)$feedDataPoint->City,
-		          'state' => (string)$feedDataPoint->State,
-		          'country' => (string)$feedDataPoint->Country,
-		          'category' => (string)$feedDataPoint->Job_Function,
-		          'description' => (string)$feedDataPoint->JobDescription,
-		          'apply_url' => (string)$feedDataPoint->applyURL,
-		          'employment_type' => (string)$feedDataPoint->JobType,
-		          'start_date' => (string)$feedDataPoint->startDate.' 00:00',
+		          'job_id'  => (string)$feed_data_point->JobID,
+		          'title' => (string)$feed_data_point->JobTitle,
+		          'city' => (string)$feed_data_point->City,
+		          'state' => (string)$feed_data_point->State,
+		          'country' => (string)$feed_data_point->Country,
+		          'category' => (string)$feed_data_point->Job_Function,
+		          'description' => (string)$feed_data_point->JobDescription,
+		          'apply_url' => (string)$feed_data_point->applyURL,
+		          'employment_type' => (string)$feed_data_point->JobType,
+		          'start_date' => (string)$feed_data_point->startDate.' 00:00',
 		          'date_created' => $db->now(),
 		          'date_updated' => $db->now()
 			));
@@ -109,8 +113,38 @@ class FeedDatabase {
 	* @return (array) return the ids inserted, will return -1 on an insert failed error
 	*/
 	public function updateTable() {
-		$db = $this->connectDb();
+		function returnJobID($arrayItem){
+			return $arrayItem['job_id'];
+		}
 
+		$db = $this->connectDb();
+		$feed_ob = new Feed($this->config);
+		$updated_feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
+		$job_ids_in_db_query_results = $db->get($this->tableName, null, array('job_id'));
+		$job_ids_in_db = array_map("returnJobID", $job_ids_in_db_query_results);
+		$updated_jobs_feed_data = Array();
+
+		foreach($updated_feed_data_as_simple_xml as $feed_data_point){
+			if(!in_array((string)$feed_data_point->JobID, $job_ids_in_db)){
+				array_push($updated_jobs_feed_data, Array(
+			          'job_id'  => (string)$feed_data_point->JobID,
+			          'title' => (string)$feed_data_point->JobTitle,
+			          'city' => (string)$feed_data_point->City,
+			          'state' => (string)$feed_data_point->State,
+			          'country' => (string)$feed_data_point->Country,
+			          'category' => (string)$feed_data_point->Job_Function,
+			          'description' => (string)$feed_data_point->JobDescription,
+			          'apply_url' => (string)$feed_data_point->applyURL,
+			          'employment_type' => (string)$feed_data_point->JobType,
+			          'start_date' => (string)$feed_data_point->startDate.' 00:00',
+			          'date_created' => $db->now(),
+			          'date_updated' => $db->now()
+				));
+			}
+		}
+
+		$query_result = $db->insertMulti($this->tableName, $updated_jobs_feed_data);
 		$db->disconnect();
+		return !$query_result ? -1 : $query_result;
 	}
 }
