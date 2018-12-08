@@ -38,14 +38,19 @@ class FeedDatabase {
 	* @return object an instance of MysqliDb to handle the db operations
 	*/
     public function connectDb() {
-    		$db = new MysqliDb (
-			Array (
-                'host' => $this->database_config['host'],
-                'username' => $this->database_config['username'], 
-                'password' => $this->database_config['password'],
-                'db'=> $this->database_config['name'],
-                'port' => $this->database_config['port'],
-                'charset' => 'utf8'));
+            try{
+                $db = new MysqliDb (
+                    Array (
+                        'host' => $this->database_config['host'],
+                        'username' => $this->database_config['username'],
+                        'password' => $this->database_config['password'],
+                        'db'=> $this->database_config['name'],
+                        'port' => $this->database_config['port'],
+                        'charset' => 'utf8'));
+            }catch(\Exception $e){
+                throw new Exception('Unable to establish connection with database.'.$e->getMessage());
+                return;
+            }
     		return $db;
     }
 
@@ -81,27 +86,39 @@ class FeedDatabase {
 	public function populateTable() {
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
-		//todo add mapfields as reference;
+
 		$map_fields = $this->config['feed']['map_fields'];
 		$feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
 
 		//gathering xml data into an array to later insert in db
 		$jobs_feed_data = Array();
 		foreach($feed_data_as_simple_xml as $feed_data_point){
-			array_push($jobs_feed_data, Array(
-		          'job_id'  => (string)$feed_data_point->JobID,
-		          'title' => (string)$feed_data_point->JobTitle,
-		          'city' => (string)$feed_data_point->City,
-		          'state' => (string)$feed_data_point->State,
-		          'country' => (string)$feed_data_point->Country,
-		          'category' => (string)$feed_data_point->Job_Function,
-		          'description' => (string)$feed_data_point->JobDescription,
-		          'apply_url' => (string)$feed_data_point->applyURL,
-		          'employment_type' => (string)$feed_data_point->JobType,
-		          'start_date' => (string)$feed_data_point->startDate.' 00:00',
-		          'date_created' => $db->now(),
-		          'date_updated' => $db->now()
-			));
+            $job_id = (!empty($map_fields['job_id'])) ?  (string)$feed_data_point->{$map_fields['job_id']} : '';
+            $title = (!empty($map_fields['title'])) ?  (string)$feed_data_point->{$map_fields['title']} : '';
+            $city = (!empty($map_fields['city'])) ?  (string)$feed_data_point->{$map_fields['city']} : '';
+            $state = (!empty($map_fields['state'])) ?  (string)$feed_data_point->{$map_fields['state']} : '';
+            $country = (!empty($map_fields['country'])) ?  (string)$feed_data_point->{$map_fields['country']} : '';
+            $category = (!empty($map_fields['category'])) ?  (string)$feed_data_point->{$map_fields['category']} : '';
+            $description = (!empty($map_fields['description'])) ?  (string)$feed_data_point->{$map_fields['description']} : '';
+            $apply_url = (!empty($map_fields['apply_url'])) ?  (string)$feed_data_point->{$map_fields['apply_url']} : '';
+            $employment_type = (!empty($map_fields['employment_type'])) ?  (string)$feed_data_point->{$map_fields['employment_type']} : '';
+            $start_date = (!empty($map_fields['start_date'])) ? new Datetime((string)$feed_data_point->{$map_fields['start_date']}) : '';
+            $start_date = (!empty($start_date)) ? $start_date->format('Y-m-d h:i:s') : '';
+
+            array_push($jobs_feed_data, Array(
+                'job_id'  => $job_id,
+                'title' => $title,
+                'city' => $city,
+                'state' => $state,
+                'country' => $country,
+                'category' => $category,
+                'description' => $description,
+                'apply_url' => $apply_url,
+                'employment_type' => $employment_type,
+                'start_date' => $start_date,
+                'date_created' => $db->now(),
+                'date_updated' => $db->now()
+            ));
 		}
 
 		$query_result = $db->insertMulti($this->tableName, $jobs_feed_data);
@@ -122,7 +139,7 @@ class FeedDatabase {
 		$feed_ob = new Feed($this->config);
 		$ids_in_feed = $feed_ob->getJobIDsFromFeed();
 		$ids_in_feed = array_map("addStringQoutes", $ids_in_feed );
-		$query = "DELETE FROM ".$this->tableName." WHERES job_id NOT IN (".implode(', ', $ids_in_feed).");";
+		$query = "DELETE FROM ".$this->tableName." WHERE job_id NOT IN (".implode(', ', $ids_in_feed).");";
 		$result = $db->rawQuery($query);
 		$db->disconnect();
 		return $result;
@@ -140,7 +157,7 @@ class FeedDatabase {
 
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
-		//todo add mapfields as reference;
+
 		$map_fields = $this->config['feed']['map_fields'];
 		$updated_feed_data_as_simple_xml = $feed_ob->getXMLFeedObject();
 		$job_ids_in_db_query_results = $db->get($this->tableName, null, array('job_id'));
@@ -148,21 +165,36 @@ class FeedDatabase {
 		$updated_jobs_feed_data = Array();
 
 		foreach($updated_feed_data_as_simple_xml as $feed_data_point){
-			if(!in_array((string)$feed_data_point->JobID, $job_ids_in_db)){
-				array_push($updated_jobs_feed_data, Array(
-			          'job_id'  => (string)$feed_data_point->JobID,
-			          'title' => (string)$feed_data_point->JobTitle,
-			          'city' => (string)$feed_data_point->City,
-			          'state' => (string)$feed_data_point->State,
-			          'country' => (string)$feed_data_point->Country,
-			          'category' => (string)$feed_data_point->Job_Function,
-			          'description' => (string)$feed_data_point->JobDescription,
-			          'apply_url' => (string)$feed_data_point->applyURL,
-			          'employment_type' => (string)$feed_data_point->JobType,
-			          'start_date' => (string)$feed_data_point->startDate.' 00:00',
-			          'date_created' => $db->now(),
-			          'date_updated' => $db->now()
-				));
+		    if(empty($map_fields['job_id'])){
+                throw new Exception('The field job_id needs to be defined in config.php');
+            }
+			if(!in_array((string)$feed_data_point->{$map_fields['job_id']}, $job_ids_in_db)){
+                $job_id = (!empty($map_fields['job_id'])) ?  (string)$feed_data_point->{$map_fields['job_id']} : '';
+                $title = (!empty($map_fields['title'])) ?  (string)$feed_data_point->{$map_fields['title']} : '';
+                $city = (!empty($map_fields['city'])) ?  (string)$feed_data_point->{$map_fields['city']} : '';
+                $state = (!empty($map_fields['state'])) ?  (string)$feed_data_point->{$map_fields['state']} : '';
+                $country = (!empty($map_fields['country'])) ?  (string)$feed_data_point->{$map_fields['country']} : '';
+                $category = (!empty($map_fields['category'])) ?  (string)$feed_data_point->{$map_fields['category']} : '';
+                $description = (!empty($map_fields['description'])) ?  (string)$feed_data_point->{$map_fields['description']} : '';
+                $apply_url = (!empty($map_fields['apply_url'])) ?  (string)$feed_data_point->{$map_fields['apply_url']} : '';
+                $employment_type = (!empty($map_fields['employment_type'])) ?  (string)$feed_data_point->{$map_fields['employment_type']} : '';
+                $start_date = (!empty($map_fields['start_date'])) ? new Datetime((string)$feed_data_point->{$map_fields['start_date']}) : '';
+                $start_date = (!empty($start_date)) ? $start_date->format('Y-m-d h:i:s') : '';
+
+                array_push($updated_jobs_feed_data, Array(
+                    'job_id'  => $job_id,
+                    'title' => $title,
+                    'city' => $city,
+                    'state' => $state,
+                    'country' => $country,
+                    'category' => $category,
+                    'description' => $description,
+                    'apply_url' => $apply_url,
+                    'employment_type' => $employment_type,
+                    'start_date' => $start_date,
+                    'date_created' => $db->now(),
+                    'date_updated' => $db->now()
+                ));
 			}
 		}
 

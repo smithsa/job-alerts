@@ -2,7 +2,12 @@
     "name": "sadesmith/shaker-job-alerts",
     "description": "Library to send job alerts of custom job feeds using MailChimp and Mandrill",
     "type": "library",
-    "license": "Apache License 2.0",
+    "license": "MIT",
+    "source": {
+        "url": "git://github.com/smithsa/job-alerts.git",
+        "type": "git",
+        "reference": "master"
+    },
     "authors": [
         {
             "name": "Sade Smith",

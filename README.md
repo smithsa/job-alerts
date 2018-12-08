@@ -27,6 +27,11 @@ For the feed=>map_fields array field  please note that active date is considered
 ```
 	'date_updated' => ''
 ```
+
+If using an augmented feed, then feed=>map_fields is required. The fields required for map_fields entries are:
+    - job_id
+    - title
+    - apply_url
 	
 ## Considerations
 
