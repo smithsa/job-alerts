@@ -33,7 +33,48 @@ If using an augmented feed, then `feed=>map_fields` is required. The fields requ
     - title
     - apply_url
  
-In addition set `is_augmented_feed` to true.    
+In addition set `is_augmented_feed` to true if supplementing the feed.
+```
+ 'feed' => [
+        'url' => '',
+        'username' => '',
+        'password' => '',
+        'map_fields' => [
+          'job_id'  => '',
+          'title' => '',
+          'city' => '',
+          'state' => '',
+          'country' => '',
+          'category' => '',
+          'description' => '',
+          'apply_url' => '',
+          'employment_type' => '',
+          'start_date' => ''
+        ],
+        'is_augmented_feed' => false
+    ],
+   	'database' => [
+        'host' => '',
+        'port' => '',
+        'name' => '',
+        'username' => '',
+        'password' => ''
+   	],
+    'mailChimp' => [
+        'list_id' => '',
+        'API_key' => '',
+        'interests' => [
+            [
+                'id' => '',
+                'name' => ''
+            ]
+        ]
+    ],
+    'mandrill' => [
+    	'API_key'=> ''
+    ]
+```
+
 	
 ## Considerations
 

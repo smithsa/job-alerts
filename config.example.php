@@ -27,12 +27,16 @@ return [
         'password' => ''
    	],
     'mailChimp' => [
-        'username' => '',
         'list_id' => '',
-        'API_key' => ''
+        'API_key' => '',
+        'interests' => [
+            [
+                'id' => '',
+                'name' => ''
+            ]
+        ]
     ],
     'mandrill' => [
-    	'username'=> '',
     	'API_key'=> ''
     ]
 ];
