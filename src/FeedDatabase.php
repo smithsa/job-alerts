@@ -81,9 +81,10 @@ class FeedDatabase {
 	/** 
 	* Populates the database based on the feed defined in the configuration file using the Feed object
 	*
+	* @param boolean, true if the feed is xml, false otherwise
 	* @return array return the ids inserted, will return -1 on an insert failed error
 	*/
-	public function populateTable() {
+	public function populateTable($is_xml = true) {
 		$db = $this->connectDb();
 		$feed_ob = new Feed($this->config);
 
@@ -147,10 +148,11 @@ class FeedDatabase {
 
 	/** 
 	* Updates the database based on new jobs added to the feed
-     *
+	*
+	* @param boolean, true if the feed is xml, false otherwise
 	* @return array return the ids inserted, will return -1 on an insert failed error
 	*/
-	public function updateTable() {
+	public function updateTable($is_xml = true) {
 		function returnJobID($arrayItem){
 			return $arrayItem['job_id'];
 		}
