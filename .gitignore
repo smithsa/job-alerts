@@ -1,5 +1,6 @@
 vendor
 config.php
+logs
 .idea
 .DS_Store
 examples/augmented-feeds/feed/*.json

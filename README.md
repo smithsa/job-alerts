@@ -23,17 +23,6 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
 
 4. rename `config.example.php` to `config.php` and fill out appropriate configuration fields.
 
-For the `feed=>map_fields` array field  please note that active date is considered to be the `date_updated` field so add an additional array field 
-```
-	'date_updated' => ''
-```
-
-If using an augmented feed, then `feed=>map_fields` is required. The fields required for `map_fields` entries are:
-    - job_id
-    - title
-    - apply_url
- 
-In addition set `is_augmented_feed` to true if supplementing the feed.
 ```
  'feed' => [
         'url' => '',
@@ -74,6 +63,19 @@ In addition set `is_augmented_feed` to true if supplementing the feed.
     	'API_key'=> ''
     ]
 ```
+
+For the `feed=>map_fields` array field  please note that active date is considered to be the `date_updated` field so add an additional array field 
+```
+	'date_updated' => ''
+```
+
+If using an augmented feed, then `feed=>map_fields` is required. The fields required for `map_fields` entries are:
+    - job_id
+    - title
+    - apply_url
+ 
+In addition set `is_augmented_feed` to true if supplementing the feed.
+
 
 	
 ## Considerations

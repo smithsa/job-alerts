@@ -1,11 +1,12 @@
 <?php
 
+
 require_once dirname(__FILE__).'/../vendor/autoload.php';
 
 /**
  * Class to interact with the database defined in the configuration file
  */
-class FeedDatabase {    
+class FeedDatabase {
 	public 	$config 	=  array();
 	private $tableName 		= 'jobs_alerts_feed';
 	private $tableFields 	= array (
@@ -20,7 +21,8 @@ class FeedDatabase {
 		  'employment_type' => 'varchar(255)',
 		  'start_date' => 'datetime',
 		  'date_created' => 'datetime NOT NULL',
-		  'date_updated' => 'datetime NOT NULL'
+		  'date_updated' => 'datetime NOT NULL',
+		  'date_deleted' => 'datetime'
 	);
 
 	/** 
@@ -118,7 +120,8 @@ class FeedDatabase {
                 'employment_type' => $employment_type,
                 'start_date' => $start_date,
                 'date_created' => $db->now(),
-                'date_updated' => $db->now()
+                'date_updated' => $db->now(),
+				'date_deleted' => '00-00-00 00:00:00'
             ));
 		}
 
@@ -141,6 +144,25 @@ class FeedDatabase {
 		$ids_in_feed = $feed_ob->getJobIDsFromFeed();
 		$ids_in_feed = array_map("addStringQoutes", $ids_in_feed );
 		$query = "DELETE FROM ".$this->tableName." WHERE job_id NOT IN (".implode(', ', $ids_in_feed).");";
+		$result = $db->rawQuery($query);
+		$db->disconnect();
+		return $result;
+	}
+
+	/**
+	* Soft Deletes entries in database but not in the feed. Jobs removed from feed.
+	*
+	* @return array return the ids deleted entries
+	*/
+	public function softDeleteJobEntriesTable() {
+		function addStringQoutes($job_id){
+			return "'".$job_id."'";
+		}
+		$db = $this->connectDb();
+		$feed_ob = new Feed($this->config);
+		$ids_in_feed = $feed_ob->getJobIDsFromFeed();
+		$ids_in_feed = array_map("addStringQoutes", $ids_in_feed );
+		$query = "UPDATE ".$this->tableName." SET date_deleted = '".$db->now()."' WHERE job_id NOT IN (".implode(', ', $ids_in_feed).");";
 		$result = $db->rawQuery($query);
 		$db->disconnect();
 		return $result;
@@ -195,7 +217,8 @@ class FeedDatabase {
                     'employment_type' => $employment_type,
                     'start_date' => $start_date,
                     'date_created' => $db->now(),
-                    'date_updated' => $db->now()
+                    'date_updated' => $db->now(),
+					'date_deleted' => '00-00-00 00:00:00'
                 ));
 			}
 		}
@@ -215,4 +238,37 @@ class FeedDatabase {
         $jobsResult = $db->get($this->tableName);
         return $jobsResult;
     }
+
+	/**
+	 * Will search the database based on fields
+	 *
+	 * @param string representative of location
+	 * @param array of categories from the user
+	 * @return array the jobs returned from the database
+	 */
+	public function searchFeedDatabase($locations, $categories) {
+		$db = $this->connectDb();
+		$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+
+		$db->where('date_deleted', '00-00-00 00:00:00');
+		$db->where('date_created', $date, '>=');
+		$cols = array();
+		if(in_array('*', $categories) && in_array('*', $locations)){
+			$db->where('id');
+		}
+		else if(in_array('*', $categories)){
+			$db->where('state  IN ("' . implode(', ', $locations) . '")');
+
+		}
+		else if(in_array('*', $categories)){
+			$db->where('(state  IN ("' . implode(', ', $locations)  . '") OR category IN ("'. implode(', ', $categories) .'"))');
+		}
+		else{
+			$db->where('(state  IN ("' . implode(', ', $locations)  . '") AND category IN ("'. implode(', ', $categories) .'"))');
+		}
+
+		$postings = $db->get( $this->tableName, null, $cols);
+		return $postings;
+
+	}
 }

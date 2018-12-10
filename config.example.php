@@ -17,7 +17,7 @@ return [
           'employment_type' => '',
           'start_date' => ''
         ],
-        'is_augmented_feed' => false
+        'is_augmented_feed' => False
     ],
    	'database' => [
         'host' => '',
@@ -26,7 +26,7 @@ return [
         'username' => '',
         'password' => ''
    	],
-    'mailChimp' => [
+    'mail_chimp' => [
         'list_id' => '',
         'API_key' => '',
         'interests' => [
@@ -37,7 +37,20 @@ return [
         ]
     ],
     'mandrill' => [
-    	'API_key'=> ''
+    	'API_key'=> '',
+        'template_name'=> ''
+    ],
+    'mail' => [
+        'from_email_address'=> '',
+        'from_name' => '',
+        'reply_to' => '',
+        'website_url' => '',
+        'subaccount' => ''
+    ],
+    'mail_styles' => [
+        'primary_color' => '',
+        'secondary_color' => '',
+        'font_color' => '',
     ]
 ];
 

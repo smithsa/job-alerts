@@ -7,6 +7,6 @@ $config = include(dirname(__FILE__).'/../config.php');
 require(dirname(__FILE__).'/../src/Interest.php');
 
 $interest = new Interest($config);
-$members = $interest->get();
+$interestResult = $interest->get();
 
-var_dump($members );
+var_dump($interestResult);

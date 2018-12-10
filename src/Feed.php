@@ -3,10 +3,10 @@
 require_once dirname(__FILE__).'/../vendor/autoload.php';
 
 class Feed {
-	public 	$config 		=  array();
-	public 	$feed_config 	=  array();
+	public 	$config;
+	public 	$feed_config;
 
-	/** 
+	/**
 	* Class constructor
 	* @param associative array the configuration variable in the config.php file
 	*/
@@ -109,5 +109,67 @@ class Feed {
         return file_put_contents($path, json_encode($jobs_array_data));
     }
 
+	/**
+	 * Will search the given array of job posts
+	 *
+	 * @param string representative of location
+	 * @param array of categories from the user
+	 * @return array the jobs returned from the database
+	 */
+	public function searchFeed($jobs, $locations, $categories) {
+		$postings = array();
+		$map_fields = $this->feed_config['map_fields'];
+		$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+		if($this->feed_config['is_augmented_feed']){
+			foreach($jobs as $job){
+				if($job['date_created'] >= $date){
+					if(in_array('*', $categories) && in_array('*', $locations)){
+						array_push($postings, $job);
+					}
+					else if(in_array('*', $categories)){
+						if(in_array($job['state'], $locations)){
+							array_push($postings, $job);
+						}
+					}
+					else if(in_array('*', $locations)){
+						if(in_array($job['category'], $categories)){
+							array_push($postings, $job);
+						}
+					}
+					else{
+						if(in_array($job['state'], $locations) && in_array($job['category'], $categories)){
+							array_push($postings, $job);
+						}
+					}
+				}
+			}
+		}else{
+			foreach($jobs as $job){
+				if($job[$map_fields['date_created']] >= $date){
+					if(in_array('*', $categories) && in_array('*', $locations)){
+						array_push($postings, $job);
+					}
+					else if(in_array('*', $categories)){
+						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['state']], $locations)){
+							array_push($postings, $job);
+						}
+					}
+					else if(in_array('*', $locations)){
+						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['category']], $categories)){
+							array_push($postings, $job);
+						}
+					}
+					else{
+						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['state']], $locations) && in_array($job[$map_fields['category']], $categories)){
+							array_push($postings, $job);
+						}
+					}
+				}
+			}
+		}
+
+		return $postings;
+
+	}
 
 }

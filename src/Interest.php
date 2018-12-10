@@ -8,7 +8,7 @@ class Interest {
      */
     function __construct($config) {
         $this->config = $config;
-        $this->mailChimp_config = $this->config['mailChimp'];
+        $this->mailChimp_config = $this->config['mail_chimp'];
     }
 
     /**
