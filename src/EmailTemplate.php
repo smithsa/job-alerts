@@ -10,6 +10,7 @@ class EmailTemplate {
     private $jobsSection;
     private $updateSection;
     private $footerSection;
+
     /**
      * Class constructor
      * @param associative array the configuration variable in the config.php file
@@ -128,16 +129,13 @@ class EmailTemplate {
 
 
     /**
-     *  helper function to sanitize the description
+     *  helper function to sanitize the description, will strip html tags
      *
      * @param string the function name that will serve as the callback
      * @return string santized description
      */
     public function sanitizeDescription($job_description){
-        $split_description =  explode('Job Description Summary:', $job_description);
-        $split_description2 = explode('Job Description', $split_description[1]);
-        $job_description = strip_tags($split_description2[0]);
-        return $job_description;
+        return strip_tags($job_description);
     }
 
 
@@ -171,7 +169,7 @@ class EmailTemplate {
                             <span style="font-size:20px"><span style="color:#0095a6"><strong>'.$job_title.'</strong></span></span><br>
 <span style="color:#808080"><strong><span style="font-size:14px">'.$job_location.'</span></strong></span><br>
 <br>
-<span style="color:#808080">'.$job_description.'</span><br/>
+<span style="color:#808080">'.$job_description.'</span><br/><br/>
                         </td>
                     </tr>
                 </tbody></table>
