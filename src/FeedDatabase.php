@@ -246,9 +246,11 @@ class FeedDatabase {
 	 * @param array of categories from the user
 	 * @return array the jobs returned from the database
 	 */
-	public function searchFeedDatabase($locations, $categories) {
+	public function searchFeedDatabase($locations, $categories, $date = '') {
 		$db = $this->connectDb();
-		$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+		if(empty($date)){
+			$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+		}
 
 		$db->where('date_deleted', '00-00-00 00:00:00');
 		$db->where('date_created', $date, '>=');
@@ -260,7 +262,7 @@ class FeedDatabase {
 			$db->where('state  IN ("' . implode(', ', $locations) . '")');
 
 		}
-		else if(in_array('*', $categories)){
+		else if(in_array('*', $locations)){
 			$db->where('(state  IN ("' . implode(', ', $locations)  . '") OR category IN ("'. implode(', ', $categories) .'"))');
 		}
 		else{

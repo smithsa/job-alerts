@@ -15,9 +15,10 @@ return [
           'description' => '',
           'apply_url' => '',
           'employment_type' => '',
-          'start_date' => ''
+          'start_date' => '',
+          'date_created' => ''
         ],
-        'is_augmented_feed' => False
+        'is_augmented_feed' => True
     ],
    	'database' => [
         'host' => '',
@@ -41,11 +42,15 @@ return [
         'template_name'=> ''
     ],
     'mail' => [
+        'email_subject' => '',
         'from_email_address'=> '',
         'from_name' => '',
         'reply_to' => '',
         'website_url' => '',
-        'subaccount' => ''
+        'subaccount' => '',
+        'update_preference_link' => '',
+        'unsubscribe_link' => '',
+        'entity' => 'Talent Community'
     ],
     'mail_styles' => [
         'primary_color' => '',

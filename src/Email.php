@@ -13,7 +13,7 @@ class Email{
         $this->mandrill_config = $this->config['mandrill'];
     }
 
-    public function sendTemplate($template_content, $email_subject, $user_email, $user_name, $send_at){
+    public function sendTemplate($template_content, $email_subject, $user_email, $user_name, $send_at = ''){
         try {
             $mandrill = new Mandrill($this->mandrill_config['API_key']);
             $template_name = $this->mandrill_config['template_name'];
@@ -62,13 +62,14 @@ class Email{
                 $send_at = '2017-01-01 00:00:00';
             }
             $result = $mandrill->messages->sendTemplate($template_name, $template_content, $message, $async, $ip_pool, $send_at);
-            print_r($result);
 
+            return $result;
         } catch(Mandrill_Error $e) {
             // Mandrill errors are thrown as exceptions
             echo 'A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage();
 
             throw $e;
+            return $e;
         }
     }
 

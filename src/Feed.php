@@ -78,6 +78,7 @@ class Feed {
 		}
 		return $job_ids_array;
 	}
+
   	/**
 	* turn array of data into an xmlstring
     *
@@ -150,17 +151,17 @@ class Feed {
 						array_push($postings, $job);
 					}
 					else if(in_array('*', $categories)){
-						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['state']], $locations)){
+						if(in_array($job[$map_fields['state']], $locations)){
 							array_push($postings, $job);
 						}
 					}
 					else if(in_array('*', $locations)){
-						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['category']], $categories)){
+						if(in_array($job[$map_fields['category']], $categories)){
 							array_push($postings, $job);
 						}
 					}
 					else{
-						if($job[$map_fields['category']] >= $date && in_array($job[$map_fields['state']], $locations) && in_array($job[$map_fields['category']], $categories)){
+						if(in_array($job[$map_fields['state']], $locations) && in_array($job[$map_fields['category']], $categories)){
 							array_push($postings, $job);
 						}
 					}

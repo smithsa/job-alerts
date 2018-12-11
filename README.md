@@ -24,44 +24,62 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
 4. rename `config.example.php` to `config.php` and fill out appropriate configuration fields.
 
 ```
- 'feed' => [
-        'url' => '',
-        'username' => '',
-        'password' => '',
-        'map_fields' => [
-          'job_id'  => '',
-          'title' => '',
-          'city' => '',
-          'state' => '',
-          'country' => '',
-          'category' => '',
-          'description' => '',
-          'apply_url' => '',
-          'employment_type' => '',
-          'start_date' => ''
-        ],
-        'is_augmented_feed' => false
-    ],
-   	'database' => [
-        'host' => '',
-        'port' => '',
-        'name' => '',
-        'username' => '',
-        'password' => ''
-   	],
-    'mailChimp' => [
-        'list_id' => '',
-        'API_key' => '',
-        'interests' => [
-            [
-                'id' => '',
-                'name' => ''
-            ]
-        ]
-    ],
-    'mandrill' => [
-    	'API_key'=> ''
-    ]
+     'feed' => [
+         'url' => '',
+         'username' => '',
+         'password' => '',
+         'map_fields' => [
+           'job_id'  => '',
+           'title' => '',
+           'city' => '',
+           'state' => '',
+           'country' => '',
+           'category' => '',
+           'description' => '',
+           'apply_url' => '',
+           'employment_type' => '',
+           'start_date' => '',
+           'date_created' => ''
+         ],
+         'is_augmented_feed' => True
+     ],
+    	'database' => [
+         'host' => '',
+         'port' => '',
+         'name' => '',
+         'username' => '',
+         'password' => ''
+    	],
+     'mail_chimp' => [
+         'list_id' => '',
+         'API_key' => '',
+         'interests' => [
+             [
+                 'id' => '',
+                 'name' => ''
+             ]
+         ]
+     ],
+     'mandrill' => [
+     	'API_key'=> '',
+         'template_name'=> ''
+     ],
+     'mail' => [
+         'email_subject' => '',
+         'from_email_address'=> '',
+         'from_name' => '',
+         'reply_to' => '',
+         'website_url' => '',
+         'subaccount' => '',
+         'update_preference_link' => '',
+         'unsubscribe_link' => '',
+         'entity' => 'Talent Community'
+     ],
+     'mail_styles' => [
+         'primary_color' => '',
+         'secondary_color' => '',
+         'font_color' => '',
+     ]
 ```
 
 For the `feed=>map_fields` array field  please note that active date is considered to be the `date_updated` field so add an additional array field 

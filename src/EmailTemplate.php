@@ -6,6 +6,9 @@ class EmailTemplate {
     public $config;
     public $feed;
     public $jobs;
+    private $headerSection;
+    private $updateSection;
+    private $footerSection;
     /**
      * Class constructor
      * @param associative array the configuration variable in the config.php file
@@ -15,6 +18,9 @@ class EmailTemplate {
         $this->feed = $this->config['feed'];
         $this->email_styles = $this->config['mail_styles'];
         $this->jobs = array();
+        $this->headerSection = '';
+        $this->updateSection = '';
+        $this->footerSection = '';
     }
 
     /**
@@ -24,21 +30,20 @@ class EmailTemplate {
      */
     public function getTemplateParts(){
         $email_parts = array(
-            'header' => $this->getHeaderSection(),
-            'footer' => $this->getFooterSection(),
-            'update' => $this->getUpdateSection()
+            'header' => $this->headerSection,
+            'footer' => $this->updateSection,
+            'update' => $this->footerSection
         );
 
         return $email_parts;
     }
 
     /**
-     *  gets the interest by id field
+     *  sets the header section of template
      *
      * param array of job positions
-     * @return string of the jobs section
      */
-    public function getHeaderSection($job_positions = array()){
+    public function setHeaderSection($job_positions = array()){
         if(empty($job_positions)){
             $job_positions = $this->jobs;
         }
@@ -54,30 +59,55 @@ class EmailTemplate {
             }
         }
 
-        return $html;
+        $this->headerSection = $html;
 
+    }
+
+    /**
+     *  gets the header section of template
+     *
+     * @return string of the jobs section
+     */
+    public function getHeaderSection(){
+        return $this->headerSection;
+    }
+
+    /**
+     *  sets the footer of the email
+     *
+     * @param update preference link
+     * @param unsubscribe link
+     * @param the type of email by name, can be Job Alert or Talent Community
+     */
+    public function setFooterSection($update_preference_link, $unsubscribe_link, $entity){
+        $this->footerSection = 'You can <a href="'.$update_preference_link.'">update your preferences</a> or <a href="'.$unsubscribe_link.'">remove yourself from the '.$entity.'.</a>';
     }
 
     /**
      *  gets the footer of the email
      *
-     * param update preference link
-     * param unsubscribe link
-     * param the type of email by name, can be Job Alert or Talent Community
      * @return string of the footer section
      */
-    public function getFooterSection($update_preference_link, $unsubscribe_link, $entity){
-        return 'You can <a href="'.$update_preference_link.'">update your preferences</a> or <a href="'.$unsubscribe_link.'">remove yourself from the '.$entity.'.</a>';
+    public function getFooterSection(){
+        return $this->footerSection;
+    }
+
+    /**
+     *  sets the update section of of the email
+     *
+     * @param update preference link
+     */
+    public function setUpdateSection($update_preference_link){
+        $this->updateSection = '<a class="mcnButton " title="Update Preferences" href="'.$update_preference_link.'" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Update Preferences</a>';
     }
 
     /**
      *  gets the update section of of the email
      *
-     * param update preference link
      * @return string of the footer section
      */
-    public function getUpdateSection($update_preference_link){
-        return '<a class="mcnButton " title="Update Preferences" href="'.$update_preference_link.'" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Update Preferences</a>';
+    public function getUpdateSection(){
+        return $this->updateSection;
     }
 
 
