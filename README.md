@@ -85,7 +85,7 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
 The fields required for `map_fields` entries are:
 *   job_id
 *   title
-*   apply_url
+*   job_url
 
 
 In addition set `is_augmented_feed` to true if you are using the database to search the feed.
