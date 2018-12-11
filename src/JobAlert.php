@@ -27,7 +27,7 @@ class JobAlert {
      *
     * @return array of associative array of requests that were sent an alert
     */
-    public function sendAlerts($subscribers, $emailTemplate, $email_subject){
+    public function sendAlerts($subscribers, $emailTemplate, $email_subject, $log_alert = False){
 
         $alerts_sent = array();
         foreach($subscribers as $subscriber){
@@ -101,6 +101,12 @@ class JobAlert {
                 }
             }
 
+        }
+        if($log_alert){
+            $log_file = fopen(dirname(__FILE__).'/../logs/log-'.date('Ymd-His'), "w") or die("Unable to open file!");
+            $txt = print_r(json_encode($alerts_sent), true);
+            fwrite($log_file, $txt);
+            fclose($log_file);
         }
         return $alerts_sent;
     }

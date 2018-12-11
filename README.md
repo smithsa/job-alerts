@@ -91,9 +91,6 @@ The fields required for `map_fields` entries are:
 In addition set `is_augmented_feed` to true if you are using the database to search the feed.
 
 
-
-
-
 ## Built With
 
 *   MYSQL
