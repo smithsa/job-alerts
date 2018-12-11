@@ -39,7 +39,7 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
            'apply_url' => '',
            'employment_type' => '',
            'start_date' => '',
-           'date_created' => ''
+           'date_created' => '',
          ],
          'is_augmented_feed' => True
      ],
@@ -82,25 +82,16 @@ Library to send job alerts of custom job feeds using MailChimp and Mandrill
      ]
 ```
 
-For the `feed=>map_fields` array field  please note that active date is considered to be the `date_updated` field so add an additional array field 
-```
-	'date_updated' => ''
-```
-
-If using an augmented feed, then `feed=>map_fields` is required. The fields required for `map_fields` entries are:
-    - job_id
-    - title
-    - apply_url
- 
-In addition set `is_augmented_feed` to true if supplementing the feed.
+The fields required for `map_fields` entries are:
+*   job_id
+*   title
+*   apply_url
 
 
-	
-## Considerations
+In addition set `is_augmented_feed` to true if you are using the database to search the feed.
 
-Augmented feeds are feeds that need a date attached. The Feed Class can generate a json feed.
-An example of hoe to generate the feed can be found in `examples/augmented-feeds/generate-feed.php` and the feed itself
-can be found in `examples/augmented-feeds/feed`
+
+
 
 
 ## Built With
