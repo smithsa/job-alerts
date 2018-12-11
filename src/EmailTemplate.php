@@ -6,7 +6,8 @@ class EmailTemplate {
     public $config;
     public $feed;
     public $jobs;
-    private $headerSection;
+    public $description_is_sanitized;
+    private $jobsSection;
     private $updateSection;
     private $footerSection;
     /**
@@ -21,6 +22,7 @@ class EmailTemplate {
         $this->headerSection = '';
         $this->updateSection = '';
         $this->footerSection = '';
+        $this->description_is_sanitized = false;
     }
 
     /**
@@ -30,7 +32,7 @@ class EmailTemplate {
      */
     public function getTemplateParts(){
         $email_parts = array(
-            'header' => $this->headerSection,
+            'header' => $this->jobsSection,
             'footer' => $this->updateSection,
             'update' => $this->footerSection
         );
@@ -39,11 +41,11 @@ class EmailTemplate {
     }
 
     /**
-     *  sets the header section of template
+     *  sets the jobs section of template
      *
      * param array of job positions
      */
-    public function setHeaderSection($job_positions = array()){
+    public function setJobSection($job_positions = array()){
         if(empty($job_positions)){
             $job_positions = $this->jobs;
         }
@@ -51,15 +53,27 @@ class EmailTemplate {
         $map_fields = $this->feed['map_fields'];
         if($this->feed['is_augmented_feed']){ //reading from our augmented feed
             foreach($job_positions as $job_position){
-                $html.= $this->generateSingJobPosting($job_position['job_id'], $job_position['city'].', '.$job_position['state'], $job_position['description'], $job_position['apply_url']);
+                if($this->description_is_sanitized){
+                    $treated_description =  $this->sanitizeDescription($job_position['description']);
+                    $html.= $this->generateSingJobPosting($job_position['title'], $job_position['city'].', '.$job_position['state'], $treated_description, $job_position['job_url']);
+
+                }else{
+                    $html.= $this->generateSingJobPosting($job_position['title'], $job_position['city'].', '.$job_position['state'], $job_position['description'], $job_position['job_url']);
+
+                }
             }
         }else{ //reading directly from the feed
             foreach($job_positions as $job_position){
-                $html.= $this->generateSingJobPosting($job_position[$map_fields['job_id']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $job_position[$map_fields['description']], $job_position[$map_fields['apply_url']]);
+                if($this->description_is_sanitized){
+                    $treated_description = $this->sanitizeDescription($job_position[$map_fields['description']]);
+                    $html.= $this->generateSingJobPosting($job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $treated_description, $job_position[$map_fields['job_url']]);
+                }else{
+                    $html.= $this->generateSingJobPosting($job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $job_position[$map_fields['description']], $job_position[$map_fields['job_url']]);
+                }
             }
         }
 
-        $this->headerSection = $html;
+        $this->jobsSection = $html;
 
     }
 
@@ -68,8 +82,8 @@ class EmailTemplate {
      *
      * @return string of the jobs section
      */
-    public function getHeaderSection(){
-        return $this->headerSection;
+    public function getJobSection(){
+        return $this->jobsSection;
     }
 
     /**
@@ -80,7 +94,9 @@ class EmailTemplate {
      * @param the type of email by name, can be Job Alert or Talent Community
      */
     public function setFooterSection($update_preference_link, $unsubscribe_link, $entity){
-        $this->footerSection = 'You can <a href="'.$update_preference_link.'">update your preferences</a> or <a href="'.$unsubscribe_link.'">remove yourself from the '.$entity.'.</a>';
+        $this->footerSection = '<span style="color:#FFFFFF">Want to change how you receive these emails?</span><br>
+               <span style="color:#FFFFFF">You can </span><a style="color:#FFFFFF; text-decoration: underline" href="'.$update_preference_link.'">update</a><span style="color:#FFFFFF"> your preferences or </span><a style="color:#FFFFFF; text-decoration: underline" href="'.$unsubscribe_link.'">unsubscribe</a> <span style="color:#FFFFFF">' .$entity.'.</span><br>';
+
     }
 
     /**
@@ -98,7 +114,7 @@ class EmailTemplate {
      * @param update preference link
      */
     public function setUpdateSection($update_preference_link){
-        $this->updateSection = '<a class="mcnButton " title="Update Preferences" href="'.$update_preference_link.'" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Update Preferences</a>';
+        $this->updateSection = '<a class="mcnButton " title="Update Preferences" href="'.$update_preference_link.'" target="_blank" style="font-weight: normal;letter-spacing: 2px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">Update Preferences</a>';
     }
 
     /**
@@ -112,6 +128,20 @@ class EmailTemplate {
 
 
     /**
+     *  helper function to sanitize the description
+     *
+     * @param string the function name that will serve as the callback
+     * @return string santized description
+     */
+    public function sanitizeDescription($job_description){
+        $split_description =  explode('Job Description Summary:', $job_description);
+        $split_description2 = explode('Job Description', $split_description[1]);
+        $job_description = strip_tags($split_description2[0]);
+        return $job_description;
+    }
+
+
+    /**
      *  generates a positing in the email
      *
      * param string representative of the job title
@@ -120,59 +150,79 @@ class EmailTemplate {
      * param string representative of the job apply url
      * @return string of the featured job
      */
-    public function generateSingJobPosting($job_title, $job_location, $job_description, $job_apply_url){
+    public function generateSingJobPosting($job_title, $job_location, $job_description, $job_url){
         return '<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
-            <tbody class="mcnTextBlockOuter">
-                <tr>
-                    <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
-                        <!--[if mso]><table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;"><tr> <![endif]-->
-                        <!--[if mso]><td valign="top" width="600" style="width:600px;"> <![endif]-->
-                        <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
-                            <tbody>
-                                <tr>
-                                    <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;"><span style="font-family:open sans,helvetica neue,helvetica,arial,sans-serif"><strong><span style="font-size:24px">'.$job_title.'</span></strong> <br> <strong><span style="color:#E37C00"><span style="font-size:17px">'.$job_location.'</span></span></strong></span>
-                                        <p><span style="font-family:open sans,helvetica neue,helvetica,arial,sans-serif"><span style="font-size:14px">'.substr(strip_tags($job_description), 0, strpos(strip_tags($job_description), ' ', 165)).'...&nbsp;</span></span>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!--[if mso]></td> <![endif]-->
-                        <!--[if mso]></tr></table> <![endif]-->
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
-            <tbody class="mcnButtonBlockOuter">
-                <tr>
-                    <td style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;" valign="top" align="left" class="mcnButtonBlockInner">
-                        <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #00355F;">
-                            <tbody>
-                                <tr>
-                                    <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Arial; font-size: 16px; padding: 14px;"> <a class="mcnButton " title="View Job Description" href="'.$job_apply_url.'" target="_blank" style="font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View Job Description</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
-            <tbody class="mcnDividerBlockOuter">
-                <tr>
-                    <td class="mcnDividerBlockInner" style="min-width:100%; padding:8px;">
-                        <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #EAEAEA;">
-                            <tbody>
-                                <tr>
-                                    <td> <span></span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>';
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+              	<!--[if mso]>
+				<table align="left" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
+				<tr>
+				<![endif]-->
+
+				<!--[if mso]>
+				<td valign="top" width="600" style="width:600px;">
+				<![endif]-->
+                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+                    <tbody><tr>
+
+                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+
+                            <span style="font-size:20px"><span style="color:#0095a6"><strong>'.$job_title.'</strong></span></span><br>
+<span style="color:#808080"><strong><span style="font-size:14px">'.$job_location.'</span></strong></span><br>
+<br>
+<span style="color:#808080">'.$job_description.'</span><br/>
+                        </td>
+                    </tr>
+                </tbody></table>
+				<!--[if mso]>
+				</td>
+				<![endif]-->
+
+				<!--[if mso]>
+				</tr>
+				</table>
+				<![endif]-->
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="min-width:100%;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" valign="top" align="left" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" class="mcnButtonContentContainer" style="border-collapse: separate !important;border-radius: 3px;background-color: #0092A5;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, Verdana, sans-serif; font-size: 14px; padding: 15px;">
+                                <a class="mcnButton " title="View Job Description" href="'.$job_url.'" target="_blank" style="font-weight: normal;letter-spacing: 2px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View Job Description</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
+    <tbody class="mcnDividerBlockOuter">
+        <tr>
+            <td class="mcnDividerBlockInner" style="min-width:100%; padding:18px;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top: 2px solid #FFFFFF;">
+                    <tbody><tr>
+                        <td>
+                            <span></span>
+                        </td>
+                    </tr>
+                </tbody></table>
+<!--
+                <td class="mcnDividerBlockInner" style="padding: 18px;">
+                <hr class="mcnDividerContent" style="border-bottom-color:none; border-left-color:none; border-right-color:none; border-bottom-width:0; border-left-width:0; border-right-width:0; margin-top:0; margin-right:0; margin-bottom:0; margin-left:0;" />
+-->
+            </td>
+        </tr>
+    </tbody>
+</table>';
     }
 
 }

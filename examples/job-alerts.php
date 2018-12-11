@@ -12,5 +12,8 @@ $subscriberObject = new Subscriber($config);
 $subscribers = $subscriberObject->getAll();
 $jobAlertObject = new JobAlert($config);
 
-$jobAlertResult = $jobAlertObject->sendAlerts($subscribers, $config['mail']['email_subject']);
+$emailTemplate = new EmailTemplate($config);
+$emailTemplate->description_is_sanitized = true;
+
+$jobAlertResult = $jobAlertObject->sendAlerts($subscribers, $emailTemplate, $config['mail']['email_subject']);
 var_dump($jobAlertResult);

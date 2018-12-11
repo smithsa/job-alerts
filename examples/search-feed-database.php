@@ -8,5 +8,5 @@ $config = include(dirname(__FILE__).'/../config.php');
 require(dirname(__FILE__).'/../src/FeedDatabase.php');
 
 $feedDb = new FeedDatabase($config);
-$searchResults = $feedDb->searchFeedDatabase(array('*'), array('Nursing'));
+$searchResults = $feedDb->searchFeedDatabase(array('*'), array('*'));
 var_dump($searchResults);

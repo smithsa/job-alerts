@@ -18,6 +18,7 @@ class FeedDatabase {
 		  'category' => 'varchar(255)',
 		  'description' => 'text',
 		  'apply_url' => 'varchar(255) NOT NULL',
+		  'job_url' => 'varchar(255) NOT NULL',
 		  'employment_type' => 'varchar(255)',
 		  'start_date' => 'datetime',
 		  'date_created' => 'datetime NOT NULL',
@@ -103,6 +104,7 @@ class FeedDatabase {
             $country = (!empty($map_fields['country'])) ?  (string)$feed_data_point->{$map_fields['country']} : '';
             $category = (!empty($map_fields['category'])) ?  (string)$feed_data_point->{$map_fields['category']} : '';
             $description = (!empty($map_fields['description'])) ?  (string)$feed_data_point->{$map_fields['description']} : '';
+			$job_url = (empty($map_fields['job_url'])) ?  $this->feed_config['job_url_base'].'?id='.(string)$feed_data_point->{$map_fields['job_id']} : '';
             $apply_url = (!empty($map_fields['apply_url'])) ?  (string)$feed_data_point->{$map_fields['apply_url']} : '';
             $employment_type = (!empty($map_fields['employment_type'])) ?  (string)$feed_data_point->{$map_fields['employment_type']} : '';
             $start_date = (!empty($map_fields['start_date'])) ? new Datetime((string)$feed_data_point->{$map_fields['start_date']}) : '';
@@ -116,6 +118,7 @@ class FeedDatabase {
                 'country' => $country,
                 'category' => $category,
                 'description' => $description,
+				'job_url' => $job_url,
                 'apply_url' => $apply_url,
                 'employment_type' => $employment_type,
                 'start_date' => $start_date,
@@ -201,6 +204,7 @@ class FeedDatabase {
                 $category = (!empty($map_fields['category'])) ?  (string)$feed_data_point->{$map_fields['category']} : '';
                 $description = (!empty($map_fields['description'])) ?  (string)$feed_data_point->{$map_fields['description']} : '';
                 $apply_url = (!empty($map_fields['apply_url'])) ?  (string)$feed_data_point->{$map_fields['apply_url']} : '';
+				$job_url = (!empty($map_fields['job_url'])) ?  $this->feed_config['job_url_base'].'?id='.(string)$feed_data_point->{$map_fields['id']} : '';
                 $employment_type = (!empty($map_fields['employment_type'])) ?  (string)$feed_data_point->{$map_fields['employment_type']} : '';
                 $start_date = (!empty($map_fields['start_date'])) ? new Datetime((string)$feed_data_point->{$map_fields['start_date']}) : '';
                 $start_date = (!empty($start_date)) ? $start_date->format('Y-m-d h:i:s') : '';
@@ -214,6 +218,7 @@ class FeedDatabase {
                     'category' => $category,
                     'description' => $description,
                     'apply_url' => $apply_url,
+                    'job_url' => $job_url,
                     'employment_type' => $employment_type,
                     'start_date' => $start_date,
                     'date_created' => $db->now(),

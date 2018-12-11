@@ -105,7 +105,8 @@ can be found in `examples/augmented-feeds/feed`
 
 ## Built With
 
-*	[PHP-MySQLi-Database-Class](https://github.com/ThingEngineer/PHP-MySQLi-Database-Class)
+*   MYSQL
 *   PHP
-*   Mandrill API
-*   Mailchimp API
+*   Mandrill
+*   Mailchimp
+*	[PHP-MySQLi-Database-Class](https://github.com/ThingEngineer/PHP-MySQLi-Database-Class)

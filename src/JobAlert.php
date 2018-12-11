@@ -22,11 +22,12 @@ class JobAlert {
     * turn array of data into an xmlstring
     *
     * @param array of objects for the subscriber
+    * @param an EmailTemplate Object which is the email template
     * @param string that represents the email's subject
      *
     * @return array of associative array of requests that were sent an alert
     */
-    public function sendAlerts($subscribers, $email_subject){
+    public function sendAlerts($subscribers, $emailTemplate, $email_subject){
 
         $alerts_sent = array();
         foreach($subscribers as $subscriber){
@@ -78,23 +79,17 @@ class JobAlert {
                 //check if its daily alerts $current_alert_type
                 if(!empty($jobsFound)){
                     //Creating the Email Template Content
-                    $emailTemplate = new EmailTemplate($this->config);
-                    $emailTemplate->setHeaderSection($jobsFound);
+                    $emailTemplate->setJobSection($jobsFound);
                     $emailTemplate->setFooterSection($this->mail_config['update_preference_link'], $this->mail_config['unsubscribe_link'], $this->mail_config['entity']);
-                    $emailTemplate->setUpdateSection($this->mail_config['update_preference_link']);
 
                     $template_content = array(
                         array(
-                            'name' => 'header',
-                            'content' => $emailTemplate->getHeaderSection()
+                            'name' => 'body',
+                            'content' => $emailTemplate->getJobSection()
                         ),
                         array(
-                            'name' => 'id',
+                            'name' => 'footer',
                             'content' => $emailTemplate->getFooterSection()
-                        ),
-                        array(
-                            'name' => 'update',
-                            'content' => $emailTemplate->getUpdateSection()
                         )
                     );
 
