@@ -54,28 +54,9 @@ class JobAlert {
             //Getting User's Alert Preference (Weekly or Daily)
             $current_alert_type = $subscriber->merge_fields->ALERTTYPE;
 
-            //Getting User's Categories of Interest
-            $current_categories = array();
-            $current_category_1 = $subscriber->merge_fields->CAT1;
-            if(!empty($current_category_1)) array_push($current_categories, $current_category_1);
-            $current_category_2 = $subscriber->merge_fields->CAT2;
-            if(!empty($current_category_2)) array_push($current_categories, $current_category_2);
-
-            //Getting User's State
-            $current_states = array();
-            $current_state = $subscriber->merge_fields->STATE;
-            if(empty($current_state)){
-                array_push($current_states, "*");
-            }else{
-                array_push($current_states, $current_state);
-            }
-
-            $weekly_search_date = date('Y-m-d H:i:s', strtotime('Today - 1 week'));
             if($current_alert_type === 'Daily' || ($current_alert_type === 'Weekly' && date("l") === 'Tuesday')){
                 //searching for jobs for user
-                $feedDb = new FeedDatabase($this->config);
-                $jobsFound = ($current_alert_type === 'Daily') ? $feedDb->searchFeedDatabase($current_states, $current_categories) : $feedDb->searchFeedDatabase($current_states, $current_categories, $weekly_search_date);
-
+                $jobsFound = $this->jobAlertSearch($current_alert_type, $subscriber);
                 //check if its daily alerts $current_alert_type
                 if(!empty($jobsFound)){
                     //Creating the Email Template Content
@@ -103,12 +84,55 @@ class JobAlert {
 
         }
         if($log_alert){
-            $log_file = fopen(dirname(__FILE__).'/../logs/log-'.date('Ymd-His'), "w") or die("Unable to open file!");
-            $txt = print_r(json_encode($alerts_sent), true);
-            fwrite($log_file, $txt);
-            fclose($log_file);
+            $this->logResults(json_encode($alerts_sent), dirname(__FILE__).'/../logs/log-'.date('Ymd-His'));
         }
         return $alerts_sent;
+    }
+
+    /**
+     * searches job alerts based on given criteria
+     *
+     * @param string of the alert type
+     * @param object of the mailchimp subscriber
+     *
+     * @return array of jobs found
+     */
+    public function jobAlertSearch($current_alert_type, $subscriber){
+        $feedDb = new FeedDatabase($this->config);
+        //Getting User's Categories of Interest
+
+        $current_categories = array();
+        $current_category_1 = $subscriber->merge_fields->CAT1;
+        if(!empty($current_category_1)) array_push($current_categories, $current_category_1);
+        $current_category_2 = $subscriber->merge_fields->CAT2;
+        if(!empty($current_category_2)) array_push($current_categories, $current_category_2);
+
+        //Getting User's State
+        $current_states = array();
+        $current_state = $subscriber->merge_fields->STATE;
+        if(empty($current_state)){
+            array_push($current_states, "*");
+        }else{
+            array_push($current_states, $current_state);
+        }
+
+        $weekly_search_date = date('Y-m-d H:i:s', strtotime('Today - 1 week'));
+        $jobsFound = ($current_alert_type === 'Daily') ? $feedDb->searchFeedDatabase($current_states, $current_categories) : $feedDb->searchFeedDatabase($current_states, $current_categories, $weekly_search_date);
+        return $jobsFound;
+    }
+
+    /**
+     * writes log to defined path
+     *
+     * @param string of log contentes
+     * @param string which is the filename of the log
+     *
+     */
+    public function logResults($logContents, $filename){
+        $log_file = fopen($filename, "w") or die("Unable to open file!");
+        $txt = print_r($logContents, true);
+        fwrite($log_file, $txt);
+        fclose($log_file);
     }
 
 
