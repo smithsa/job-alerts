@@ -52,7 +52,7 @@ return [
         'subaccount' => '',
         'update_preference_link' => '',
         'unsubscribe_link' => '',
-        'entity' => 'Talent Community'
+        'entity' => 'Job Alerts'
     ],
     'mail_styles' => [
         'primary_color' => '',
