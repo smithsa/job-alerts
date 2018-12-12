@@ -18,7 +18,7 @@ class EmailTemplate {
     function __construct($config) {
         $this->config = $config;
         $this->feed = $this->config['feed'];
-        $this->email_styles = $this->config['mail_styles'];
+        $this->mail_styles = $this->config['mail_styles'];
         $this->jobs = array();
         $this->headerSection = '';
         $this->updateSection = '';
@@ -95,8 +95,9 @@ class EmailTemplate {
      * @param the type of email by name, can be Job Alert or Talent Community
      */
     public function setFooterSection($update_preference_link, $unsubscribe_link, $entity){
-        $this->footerSection = '<span style="color:#FFFFFF">Want to change how you receive these emails?</span><br>
-               <span style="color:#FFFFFF">You can </span><a style="color:#FFFFFF; text-decoration: underline" href="'.$update_preference_link.'">update</a><span style="color:#FFFFFF"> your preferences or </span><a style="color:#FFFFFF; text-decoration: underline" href="'.$unsubscribe_link.'">unsubscribe</a> <span style="color:#FFFFFF">' .$entity.'.</span><br>';
+        $footerBodyColor = $this->mail_styles['footer_font_color'];
+        $this->footerSection = '<span style="color:'.$footerBodyColor.'">Want to change how you receive these emails?</span><br>
+               <span style="color:'.$footerBodyColor.'">You can </span><a style="color:'.$footerBodyColor.'; text-decoration: underline" href="'.$update_preference_link.'">update</a><span style="color:'.$footerBodyColor.'"> your preferences or </span><a style="color:'.$footerBodyColor.'; text-decoration: underline" href="'.$unsubscribe_link.'">unsubscribe</a> <span style="color:'.$footerBodyColor.'">' .$entity.'.</span><br>';
 
     }
 
@@ -149,6 +150,8 @@ class EmailTemplate {
      * @return string of the featured job
      */
     public function generateSingJobPosting($job_title, $job_location, $job_description, $job_url){
+        $primaryColor = $this->mail_styles['primary_color'];
+        $bodyColor = $this->mail_styles['body_font_color'];
         return '<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
     <tbody class="mcnTextBlockOuter">
         <tr>
@@ -166,10 +169,10 @@ class EmailTemplate {
 
                         <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
 
-                            <span style="font-size:20px"><span style="color:#0095a6"><strong>'.$job_title.'</strong></span></span><br>
-<span style="color:#808080"><strong><span style="font-size:14px">'.$job_location.'</span></strong></span><br>
+                            <span style="font-size:20px"><span style="color:'.$primaryColor.'"><strong>'.$job_title.'</strong></span></span><br>
+<span style="color:'.$bodyColor.'"><strong><span style="font-size:14px">'.$job_location.'</span></strong></span><br>
 <br>
-<span style="color:#808080">'.$job_description.'</span><br/><br/>
+<span style="color:'.$bodyColor.'">'.$job_description.'</span><br/><br/>
                         </td>
                     </tr>
                 </tbody></table>

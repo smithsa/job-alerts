@@ -55,9 +55,10 @@ return [
         'entity' => 'Job Alerts'
     ],
     'mail_styles' => [
-        'primary_color' => '',
-        'secondary_color' => '',
-        'font_color' => '',
+        'primary_color' => '#0095a6',
+        'body_font_color' => '#808080',
+        'footer_background_color' => '#656161',
+        'footer_font_color' => '#ffffff'
     ]
 ];
 
