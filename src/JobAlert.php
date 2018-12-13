@@ -61,7 +61,13 @@ class JobAlert {
                 if(!empty($jobsFound)){
                     //Creating the Email Template Content
                     $emailTemplate->setJobSection($jobsFound);
-                    $emailTemplate->setFooterSection($this->mail_config['update_preference_link'], $this->mail_config['unsubscribe_link'], $this->mail_config['entity']);
+                    if($this->mail_config['add_subscriber']){
+                        $unpadtelink = $this->mail_config['update_preference_link'].'?subscriber='.md5($current_email);
+                        $unsubcribelink = $this->mail_config['unsubscribe_link'].'?subscriber='.md5($current_email);
+                        $emailTemplate->setFooterSection($unpadtelink, $unsubcribelink, $this->mail_config['entity']);
+                    }else{
+                        $emailTemplate->setFooterSection($this->mail_config['update_preference_link'], $this->mail_config['unsubscribe_link'], $this->mail_config['entity']);
+                    }
 
                     $template_content = array(
                         array(

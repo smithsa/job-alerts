@@ -52,6 +52,7 @@ return [
         'subaccount' => '',
         'update_preference_link' => '',
         'unsubscribe_link' => '',
+        'add_subscriber' => True,
         'entity' => 'Job Alerts'
     ],
     'mail_styles' => [
