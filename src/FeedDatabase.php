@@ -252,8 +252,9 @@ class FeedDatabase {
 	 * @return array the jobs returned from the database
 	 */
 	public function searchFeedDatabase($locations, $categories, $date = '') {
+
 		$db = $this->connectDb();
-		if(empty($date)){
+		if(empty($date) || $date == 'null'){
 			$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
 		}
 
@@ -271,7 +272,8 @@ class FeedDatabase {
 			$db->where('(state  IN ("' . implode(', ', $locations)  . '") OR category IN ("'. implode(', ', $categories) .'"))');
 		}
 		else{
-			$db->where('(state  IN ("' . implode(', ', $locations)  . '") AND category IN ("'. implode(', ', $categories) .'"))');
+			$db->where('category', $categories, 'IN');
+			$db->where('state', $locations, 'IN');
 		}
 
 		$postings = $db->get( $this->tableName, null, $cols);
