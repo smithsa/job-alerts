@@ -218,7 +218,7 @@ $emailTemplate->description_is_sanitized = true;
 $jobAlertResult = $jobAlertObject->sendAlerts($subscribers, $emailTemplate, $config['mail']['email_subject'], True);
 ```
 ### Email Template Class
-The email template class of this library is used to create the body, jobs, and footer partial of the Mandrill email temple. You want to create a child class if you need to change the default structure. An example of this can be seen in `examples/ExampleEmailTemplate.php`
+The email template class of this library is used to create the body, jobs, and footer partial of the Mandrill email temple. You want to create a child class if you need to change the default structure or sanitize the content you recieved from the feed. An example of this can be seen in `examples/ExampleEmailTemplate.php`
 
 ## Considerations
 - Unsubscribe and update preference for the job alert email page must be built outside of this library.
