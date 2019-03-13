@@ -168,8 +168,6 @@ require(dirname(__FILE__).'/src/FeedDatabase.php');
 
 $feedDb = new FeedDatabase($config);
 $dbDeletedResult = $feedDb->deleteJobEntriesTable();
-
-$feedDb = new FeedDatabase($config);
 $dbPopulateResult = $feedDb->updateTable();
 ```
 
