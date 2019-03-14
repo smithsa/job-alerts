@@ -127,19 +127,24 @@ class JobAlert {
         return $jobsFound;
     }
 
+    
     /**
      * writes log to defined path
      *
      * @param string of log contentes
      * @param string which is the filename of the log
      *
+     * @return boolean. true if write is successful, false otherwise.
      */
     public function logResults($logContents, $filename){
-        $log_file = fopen($filename, "w") or die("Unable to open file!");
-        $txt = print_r($logContents, true);
-        fwrite($log_file, $txt);
-        fclose($log_file);
+        if(!is_file($filename)){ 
+            file_put_contents($filename, $logContents); 
+            return True ;
+        }
+        
+        return False;
     }
+
 
 
 
