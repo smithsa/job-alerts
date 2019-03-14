@@ -115,7 +115,12 @@ mc:edit="body"
 mc:edit="footer"
 ```
 Make sure the name of the template you just created is added to the configuration file in `config.php`. The field will be `mandrill => template_name`.
-##### 2. Add Blocks
+
+##### 2. Add SPF and DKIM records to sending Domain's DNS settings
+All messages that you send through Mandrill use your sending domain's SPF and DKIM records for authentication.
+
+
+##### 3. Add Blocks
 Please note, Mandrill account will need blocks to send these email job alerts. Make sure bloks are allocated. You can add these through Mailchimp or Mandrill.
 
 ### Import Configuration
