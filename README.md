@@ -117,11 +117,13 @@ mc:edit="footer"
 Make sure the name of the template you just created is added to the configuration file in `config.php`. The field will be `mandrill => template_name`.
 
 ##### 2. Add SPF and DKIM records to sending Domain's DNS settings
-All messages that you send through Mandrill use your sending domain's SPF and DKIM records for authentication.
+You must add SPF and DKIM records and verify ownership of your sending domains before you can send email through your account. Mandrill will not send any email from unverified domains or domains without valid SPF and DKIM records.
 
+[Set Up SPF and DKIM for Your Sending Domains](https://mandrill.zendesk.com/hc/en-us/articles/205582267#set-up-spf-and-dkim-for-your-sending-domains)
 
 ##### 3. Add Blocks
 Please note, Mandrill account will need blocks to send these email job alerts. Make sure bloks are allocated. You can add these through Mailchimp or Mandrill.
+
 
 ### Import Configuration
 ```
