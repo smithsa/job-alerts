@@ -254,8 +254,8 @@ class FeedDatabase {
 	public function searchFeedDatabase($locations, $categories, $date = '') {
 
 		$db = $this->connectDb();
-		if(empty($date) || $date == 'null'){
-			$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+		if(empty($date) || $date == 'null' || $date == null || !isset($date)){
+			$date = date('Y-m-d H:i:s', strtotime('Today'));
 		}
 
 		$db->where('date_deleted', '00-00-00 00:00:00');

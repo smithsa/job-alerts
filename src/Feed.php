@@ -120,7 +120,7 @@ class Feed {
 	public function searchFeed($jobs, $locations, $categories) {
 		$postings = array();
 		$map_fields = $this->feed_config['map_fields'];
-		$date = date('Y-m-d H:i:s', strtotime('Today - 1 days'));
+		$date = date('Y-m-d H:i:s', strtotime('Today'));
 		if($this->feed_config['is_augmented_feed']){
 			foreach($jobs as $job){
 				if($job['date_created'] >= $date){

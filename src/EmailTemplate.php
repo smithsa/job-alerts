@@ -56,10 +56,10 @@ class EmailTemplate {
             foreach($job_positions as $job_position){
                 if($this->description_is_sanitized){
                     $treated_description =  $this->sanitizeDescription($job_position['description']);
-                    $html.= $this->generateSingJobPosting($job_position['title'], $job_position['city'].', '.$job_position['state'], $treated_description, $job_position['job_url']);
+                    $html.= $this->generateSingJobPosting($job_position['job_id'], $job_position['title'], $job_position['city'].', '.$job_position['state'], $treated_description, $job_position['job_url']);
 
                 }else{
-                    $html.= $this->generateSingJobPosting($job_position['title'], $job_position['city'].', '.$job_position['state'], $job_position['description'], $job_position['job_url']);
+                    $html.= $this->generateSingJobPosting($job_position['job_id'], $job_position['title'], $job_position['city'].', '.$job_position['state'], $job_position['description'], $job_position['job_url']);
 
                 }
             }
@@ -67,9 +67,9 @@ class EmailTemplate {
             foreach($job_positions as $job_position){
                 if($this->description_is_sanitized){
                     $treated_description = $this->sanitizeDescription($job_position[$map_fields['description']]);
-                    $html.= $this->generateSingJobPosting($job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $treated_description, $job_position[$map_fields['job_url']]);
+                    $html.= $this->generateSingJobPosting($job_position['job_id'], $job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $treated_description, $job_position[$map_fields['job_url']]);
                 }else{
-                    $html.= $this->generateSingJobPosting($job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $job_position[$map_fields['description']], $job_position[$map_fields['job_url']]);
+                    $html.= $this->generateSingJobPosting($job_position['job_id'], $job_position[$map_fields['title']], $job_position[$map_fields['city']].', '.$job_position[$map_fields['state']], $job_position[$map_fields['description']], $job_position[$map_fields['job_url']]);
                 }
             }
         }
@@ -149,7 +149,7 @@ class EmailTemplate {
      * param string representative of the job apply url
      * @return string of the featured job
      */
-    public function generateSingJobPosting($job_title, $job_location, $job_description, $job_url){
+    public function generateSingJobPosting($job_id, $job_title, $job_location, $job_description, $job_url){
         $primaryColor = $this->mail_styles['primary_color'];
         $bodyColor = $this->mail_styles['body_font_color'];
         return '<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
@@ -196,7 +196,7 @@ class EmailTemplate {
                     <tbody>
                         <tr>
                             <td align="center" valign="middle" class="mcnButtonContent" style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, Verdana, sans-serif; font-size: 14px; padding: 15px;">
-                                <a class="mcnButton " title="View Job Description" href="'.$job_url.'" target="_blank" style="font-weight: normal;letter-spacing: 2px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View Job Description</a>
+                                <a class="mcnButton " title="View Job Description" href="'.( !empty($job_url) ? $job_url : 'https://optioncare.com/posting/?id='.$job_id).'" target="_blank" style="font-weight: normal;letter-spacing: 2px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;">View Job Description</a>
                             </td>
                         </tr>
                     </tbody>
